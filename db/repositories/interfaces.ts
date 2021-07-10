@@ -8,3 +8,7 @@ interface IProductsRepo {
      */
     getProduct(id: number): Promise<Product>;
 }
+
+interface ICartsRepo {
+    getAllCarts(): Promise<Cart>;
+}
