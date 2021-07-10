@@ -1,21 +1,21 @@
 /**
- * Entita produktu
+ * Entita produktu.
  */
 class Product {
     /**
-     * Unikátní identifikátor
+     * Identifikátor produktu.
      */
     private _id: number;
     /**
-     * Název produktu
+     * Název produktu.
      */
     private _name: string;
     /**
-     * Typ produktu
+     * Typ produktu.
      */
     private _type: string;
     /**
-     * Cena produktu
+     * Cena produktu.
      */
     private _price: number;
 
