@@ -6,6 +6,8 @@ const mongoDbClient = require("./db/connections/mongodb");
 // const jsonsProducts = require("./db/dataset/result.json");
 //const jsonsCustomers = require("./db/dataset/customers.json");
 
+const cartsRoute = require("./routes/carts-route");
+
 
 const app = express();
 const port = 3000;
@@ -27,4 +29,4 @@ process.on('SIGINT', function () {
 
 
 // routes - products
-//app.use('/products', products);
+app.use('/carts', cartsRoute);
