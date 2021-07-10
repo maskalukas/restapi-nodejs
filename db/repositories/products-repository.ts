@@ -1,3 +1,4 @@
+export {};
 const mysqlQuery = require("../connections/mysql-query")
 /**
  * Třída pro interakce s databází produktů.

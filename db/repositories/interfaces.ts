@@ -1,16 +1,16 @@
 /**
- * Interface pro repozitář produktů
+ * Interface pro repozitář produktů.
  */
 interface IProductsRepo {
     /**
-     * Vrací produkt podle identifikátoru
-     * @param id = identifikátor produktu
+     * Vrací produkt podle identifikátoru.
+     * @param id = Identifikátor produktu.
      */
     getProduct(id: number): Promise<Product>;
 }
 
 /**
- * Interface pro repozitář košíků
+ * Interface pro repozitář košíků.
  */
 interface ICartsRepo {
     /**
@@ -27,4 +27,13 @@ interface ICartsRepo {
     getCart(userId: number): Promise<Cart>;
 }
 
-
+/**
+ * Interface pro repozitář
+ */
+interface IUserRepo {
+    /**
+     * Vrací zákazníka podle jeho identifikátoru.
+     * @param userId = Identifikátor zákazníka.
+     */
+    getUserById(userId: number): Promise<Customer>;
+}
