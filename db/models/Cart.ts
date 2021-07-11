@@ -2,7 +2,7 @@ export {};
 /**
  * Entita košíku
  */
-class Cart {
+class Cart implements TMongoCartDocument {
     /**
      * Identifikátor podle, kterého se identifikuje košík.
      */
@@ -10,9 +10,7 @@ class Cart {
     /**
      * Obsahuje identifikátory produktů, které košík obsahuje.
      */
-    private _productsIds: number[] = [];
-    // test
-    private _name: string;
+    private _products: TMongoCartProductDocument[] = [];
 
     get userId(): number {
         return this._userId;
@@ -22,21 +20,14 @@ class Cart {
         this._userId = value;
     }
 
-    get productsIds(): number[] {
-        return this._productsIds;
+    get products(): TMongoCartProductDocument[] {
+        return this._products;
     }
 
-    set productsIds(value: number[]) {
-        this._productsIds = value;
+    set products(value: TMongoCartProductDocument[]) {
+        this._products = value;
     }
 
-    get name(): string {
-        return this._name;
-    }
-
-    set name(value: string) {
-        this._name = value;
-    }
 }
 
 module.exports = Cart;

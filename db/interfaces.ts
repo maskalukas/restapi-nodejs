@@ -1,4 +1,9 @@
-type TMongoCarDocument = {
-    cartId: number;
-    productsIds: { id: number; quantity: number; }
+type TMongoCartDocument = {
+    "_userId"?: number;
+    productsIds?: TMongoCartProductDocument[];
+}
+
+type TMongoCartProductDocument = {
+    id: number;
+    quantity: number;
 }

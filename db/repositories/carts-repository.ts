@@ -1,3 +1,6 @@
+import {ICartsRepo} from "./interfaces";
+import {WriteOpResult} from "mongodb";
+
 const mongoDbClient = require("../connections/mongodb");
 const Cart = require("../models/Cart");
 
@@ -16,17 +19,18 @@ class CartsRepository implements ICartsRepo {
 
 
     /** @inheritdoc */
-    public getCartById(cartId: number): Promise<TMongoCarDocument|null> {
+    public getCartById(userId: number): Promise<TMongoCartDocument|null> {
         this.mongoDb = mongoDbClient.getDB();
 
-        return this.mongoDb.collection(this.collectionName).findOne({
-            cartId: cartId
-        });
+        const cartDocument: TMongoCartDocument = {
+            '_userId': userId
+        }
+
+        return this.mongoDb.collection(this.collectionName).findOne(cartDocument);
     }
 
     /** @inheritdoc */
-    public createCart(userId: number): Promise<TMongoCarDocument> {
-
+    public createCart(userId: number): Promise<WriteOpResult> {
         const NewCart = new Cart();
         NewCart.userId = userId;
 

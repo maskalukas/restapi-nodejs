@@ -1,3 +1,5 @@
+import {IProductsRepo} from "./interfaces";
+
 export {};
 const mysqlQuery = require("../connections/mysql-query")
 /**

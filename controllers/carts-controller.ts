@@ -1,3 +1,7 @@
+import {ICartsService} from "../services/interfaces";
+import {WriteOpResult} from "mongodb";
+import {deflateRawSync} from "zlib";
+
 export {};
 
 class CartsController {
@@ -9,8 +13,13 @@ class CartsController {
     }
 
     public async addProduct(req, res, next) {
-        const cartResult: TMongoCarDocument|false = await this.CartsService.createCartIfNotExists(5);
-        res.send(cartResult);
+        const cartResult = await this.CartsService.createCartIfNotExists(25);
+
+        if(cartResult) {
+        }  else {
+            res.status(409);
+            res.send("Již existuje");
+        }
     }
 
 }

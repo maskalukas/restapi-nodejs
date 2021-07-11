@@ -1,7 +1,10 @@
+export {};
+import {WriteOpResult} from "mongodb";
+
 /**
  * Interface pro repozitář produktů.
  */
-interface IProductsRepo {
+export interface IProductsRepo {
     /**
      * Vrací produkt podle identifikátoru.
      * @param id = Identifikátor produktu.
@@ -12,25 +15,25 @@ interface IProductsRepo {
 /**
  * Interface pro repozitář košíků.
  */
-interface ICartsRepo {
+export interface ICartsRepo {
     /**
      * Vytvoření nového košíku.
      * @param userId = Identifikátor košíku se vytvoří
      *                 podle identifikátoru uživatele.
      */
-    createCart(userId: number): Promise<TMongoCarDocument>;
+    createCart(userId: number): Promise<WriteOpResult>;
 
     /**
      * Najde v databázi uživatelovo košík.
      * @param userId = Identifikátor pro nalezení košíku.
      */
-    getCartById(userId: number): Promise<TMongoCarDocument|null>;
+    getCartById(userId: number): Promise<TMongoCartDocument|null>;
 }
 
 /**
  * Interface pro repozitář
  */
-interface IUserRepo {
+export interface IUserRepo {
     /**
      * Vrací zákazníka podle jeho identifikátoru.
      * @param userId = Identifikátor zákazníka.

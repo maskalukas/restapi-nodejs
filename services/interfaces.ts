@@ -1,4 +1,6 @@
-interface ICartsService {
+import {WriteOpResult} from "mongodb";
+
+export interface ICartsService {
     /**
      * Kontroluje zda v databázi existuje košík.
      * @param userId = Identifikátor pro nalezení košíku.
@@ -16,5 +18,5 @@ interface ICartsService {
      * Vytvoření nového košíku.
      * @param userId = Identifikátor košíku.
      */
-    createCartIfNotExists(userId: number): Promise<TMongoCarDocument|false>;
+    createCartIfNotExists(userId: number): Promise<WriteOpResult|false>;
 }

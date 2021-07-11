@@ -1,3 +1,6 @@
+import {ICartsRepo} from "../db/repositories/interfaces";
+import {WriteOpResult} from "mongodb";
+import {ICartsService} from "./interfaces";
 export {};
 const CartsRepository = require("../db/repositories/carts-repository");
 
@@ -20,11 +23,14 @@ class CartsService implements ICartsService {
     }
 
     /** @inheritDoc **/
-    public async createCartIfNotExists(userId: number): Promise<TMongoCarDocument|false> {
-        if(!await this.checkIfCartExists(userId)) {
+    public async createCartIfNotExists(userId: number): Promise<WriteOpResult|false> {
+        const exists = await this.checkIfCartExists(userId);
+        if(!exists) {
             return this.CartsRepo.createCart(userId);
         } else {
-            return new Promise(() => false)
+            return new Promise((resolve, reject) => {
+                resolve(false);
+            })
         }
     }
 
