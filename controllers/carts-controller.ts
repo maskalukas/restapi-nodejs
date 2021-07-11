@@ -11,7 +11,7 @@ class CartsController {
     }
 
     public async addProduct(req, res, next) {
-        const result = await this.CartsService.addProductToCart(130, 53);
+        const result = await this.CartsService.addProductToCart(Number(req.params.cartId), Number(req.params.productId));
         res.send(result);
     }
 
@@ -32,6 +32,11 @@ class CartsController {
 
     public async removeProductFromCart(req, res, next) {
         const result = await this.CartsService.removeProductFromCart(Number(req.params.cartId),Number(req.params.productId));
+        res.send(result);
+    }
+
+    public async setIncompletePurchase(req, res, next) {
+        const result = await this.CartsService.setIncompletePurchase(Number(req.params.cartId));
         res.send(result);
     }
 

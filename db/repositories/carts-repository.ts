@@ -33,7 +33,8 @@ class CartsRepository implements ICartsRepo {
 
         const NewCart: TMongoCartDocument = {
             cartId: cartId,
-            products: []
+            products: [],
+            incompletePurchase: null
         }
 
         return this.mongoDb.collection(this.collectionName).insertOne(NewCart)
@@ -90,6 +91,20 @@ class CartsRepository implements ICartsRepo {
             $pull: { products: { productId: productId } }
         }
         return this.mongoDb.collection(this.collectionName).updateOne(filter, pullObject);
+    }
+
+    /** @inheritDoc */
+    public setIncompletePurchase(cartId: number): Promise<any> {
+        this.setMongoDb();
+
+        const filter: TMongoCartDocument = { cartId: cartId };
+        const setObject: UpdateQuery<TMongoCartDocument> = {
+            $set: {
+                incompletePurchase: true
+            }
+        }
+
+        return this.mongoDb.collection(this.collectionName).updateOne(filter, setObject)
     }
 
 

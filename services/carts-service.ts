@@ -13,13 +13,13 @@ class CartsService implements ICartsService {
 
 
     /** @inheritDoc **/
-    public async addProductToCart(cartId: number, productId: number): Promise<any> {
+    public async addProductToCart(cartId: number, productId: number): Promise<false|TMongoCartDocument> {
         const cartForUser = await this.createCartIfNotExists(cartId);
 
         if(cartForUser.products.some(product => product.productId === productId)) {
-
+            return new Promise((resolve) => resolve(null))
         } else {
-            return  await this.CartsRepo.addProductToCart(cartId, productId);
+            return this.CartsRepo.addProductToCart(cartId, productId);
         }
     }
 
@@ -69,7 +69,10 @@ class CartsService implements ICartsService {
         return this.CartsRepo.removeProductFromCart(cartId,productId);
     }
 
-
+    /** @inheritDoc  */
+    public setIncompletePurchase(cartId: number): Promise<any> {
+        return this.CartsRepo.setIncompletePurchase(cartId);
+    }
 
 
 }

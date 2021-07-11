@@ -6,7 +6,7 @@ export interface ICartsService {
      * @param cartId = Identifikátor pro nalezení košíku.
      * @param productId = Identifikátor produktu, který se přidá do košíku.
      */
-    addProductToCart(cartId: number, productId: number): Promise<boolean>;
+    addProductToCart(cartId: number, productId: number): Promise<false|TMongoCartDocument>;
 
     /**
      * Vytvoření nového košíku.
@@ -41,5 +41,12 @@ export interface ICartsService {
      * @param productId = Identifikátor produktu, který se odstraní.
      */
     removeProductFromCart(cartId: number, productId: number): Promise<any>;
+
+    /**
+     * Nastaví v databázi záznam košíku na stav (true),
+     * a to znamená, že si zákazník objednávku na poslední chvíli rozmyslel.
+     * @param cartId = Identifikátor košíku.
+     */
+    setIncompletePurchase(cartId: number): Promise<any>
 }
 

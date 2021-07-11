@@ -1,5 +1,3 @@
-import {IUserService} from "./services/interfaces";
-
 export {};
 const express = require("express");
 const mysqlPool = require("./db/connections/mysql");
@@ -9,12 +7,9 @@ const mongoDbClient = require("./db/connections/mongodb");
 //const jsonsCustomers = require("./db/dataset/customers.json");
 
 const cartsRoute = require("./routes/carts-route");
+
 const app = express();
 const port = 3000;
-
-app.use("/", (req, res, next) => {
-    next();
-});
 
 app.listen(port,() => {
     console.log("Started..+.");
