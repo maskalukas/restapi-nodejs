@@ -1,9 +1,10 @@
 import {ICartsRepo} from "../db/repositories/interfaces";
-import {WriteOpResult} from "mongodb";
 import {ICartsService} from "./interfaces";
+import {deflateRawSync} from "zlib";
+import {BulkWriteResult, UpdateWriteOpResult} from "mongodb";
 export {};
 const CartsRepository = require("../db/repositories/carts-repository");
-const CustomerService = require("./customers-service");
+const CustomersService = require("./customers-service");
 
 /**
  * Služba pro košíky.
@@ -55,28 +56,33 @@ class CartsService implements ICartsService {
     }
 
     /** @inheritDoc */
-    public increaseQuantityOfProductByOne(cartId: number, productId: number): Promise<TMongoCartProductDocument> {
-        return this.CartsRepo.changeQuantityOfProduct(cartId,productId, 1);
+    public async increaseQuantityOfProductByOne(cartId: number, productId: number): Promise<boolean> {
+        const updateResult: UpdateWriteOpResult = await this.CartsRepo.changeQuantityOfProduct(cartId,productId, 1);
+        return this.checkUpdate(updateResult);
     }
 
     /** @inheritDoc */
-    public decreaseQuantityOfProductByOne(cartId: number,productId: number):  Promise<TMongoCartProductDocument> {
-        return this.CartsRepo.changeQuantityOfProduct(cartId,productId, -1);
+    public async decreaseQuantityOfProductByOne(cartId: number,productId: number):  Promise<boolean> {
+        const updateResult: UpdateWriteOpResult = await this.CartsRepo.changeQuantityOfProduct(cartId,productId, -1);
+        return this.checkUpdate(updateResult);
     }
 
     /** @inheritDoc */
-    public setExactNumberOfQuantitiesOfProduct(cartId: number,productId: number, newQuantity: number): Promise<any> {
-        return this.CartsRepo.setExactNumberOfQuantitiesOfProduct(cartId,productId, newQuantity);
+    public async setExactNumberOfQuantitiesOfProduct(cartId: number,productId: number, newQuantity: number): Promise<boolean> {
+        const updateResult = await this.CartsRepo.setExactNumberOfQuantitiesOfProduct(cartId,productId, newQuantity);
+        return this.checkUpdate(updateResult);
     }
 
     /** @inheritDoc */
-    public removeProductFromCart(cartId: number,productId: number): Promise<any> {
-        return this.CartsRepo.removeProductFromCart(cartId,productId);
+    public async removeProductFromCart(cartId: number,productId: number): Promise<boolean> {
+        const updateResult = await this.CartsRepo.removeProductFromCart(cartId,productId);
+        return this.checkUpdate(updateResult);
     }
 
     /** @inheritDoc  */
-    public setIncompletePurchase(cartId: number): Promise<any> {
-        return this.CartsRepo.setIncompletePurchase(cartId);
+    public async setIncompletePurchase(cartId: number): Promise<any> {
+        const updateResult = await this.CartsRepo.setIncompletePurchase(cartId);
+        return this.checkUpdate(updateResult);
     }
 
     /** @inheritDoc */
@@ -90,15 +96,24 @@ class CartsService implements ICartsService {
 
         const incompletePurchaseCarts = await this.getAllIncompletePurchaseCarts();
         const customersIds = incompletePurchaseCarts.map(x => x.cartId);
-
         const customers = await CustomersServiceIns.getCustomersByIds(customersIds);
 
-        const customersEmails = customers.map(customer => {
-            return "customer-email";
+        // odeslání emailu
+         customers.forEach(customer => {
+            console.log(`Zákazníkovi s id: ${customer.cartId} byl odeslán email.`)
         });
 
-        // Zde bych pak odeslal email zákazníkovi, ale podle zadání to není potřeba.
         return new Promise(resolve => resolve(true));
+    }
+
+    private checkUpdate(updateResult: UpdateWriteOpResult): Promise<boolean> {
+        return new Promise((resolve) => {
+            if(updateResult.result.nModified === 1) {
+                resolve(true);
+            } else if(updateResult.result.n === 0) {
+                resolve(false);
+            }
+        });
     }
 }
 

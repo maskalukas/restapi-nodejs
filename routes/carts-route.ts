@@ -15,9 +15,9 @@ const initRouters = () => {
     router.put("/:cartId/incompletepurchase", CartControllerIns.setIncompletePurchase.bind(CartControllerIns));
     router.put("/:cartId/product/:productId/increment", CartControllerIns.increaseQuantity.bind(CartControllerIns));
     router.put("/:cartId/product/:productId/decrement", CartControllerIns.decreaseQuantity.bind(CartControllerIns));
-    router.put("/:cartId/quantity/:number", CartControllerIns.setNumberOfQuantity.bind(CartControllerIns));
+    router.put("/:cartId/product/:productId/quantity/:number", CartControllerIns.setNumberOfQuantity.bind(CartControllerIns));
 
-    router.delete("/:cartId/product/:productId", CartControllerIns.removeProductFromCart.bind(CartControllerIns))
+    router.delete("/:cartId/product/:productId", CartControllerIns.removeProductFromCart.bind(CartControllerIns));
 }
 initRouters();
 

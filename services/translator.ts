@@ -31,7 +31,7 @@ class Translator {
         if(!Translator.instance) {
             Translator.instance = new Translator();
             Translator.instance.CURRENT_LANG = Translator.instance.DEFAULT_LANG;
-            Translator.instance.languageData = require(`./langs/${Translator.instance.CURRENT_LANG}.js`);
+            Translator.instance.languageData = require(`../languages/${Translator.instance.CURRENT_LANG}.js`);
         }
 
         return Translator.instance;

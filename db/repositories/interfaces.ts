@@ -1,5 +1,5 @@
 export {};
-import {WriteOpResult} from "mongodb";
+import { UpdateWriteOpResult, WriteOpResult} from "mongodb";
 
 
 
@@ -32,7 +32,7 @@ export interface ICartsRepo {
      * @param productId = Identifikátor produktu, u kterého proběhně navýšení množství.
      * @param incrementByNumber = O toto číslo se dané množství navýší či sníží.
      */
-    changeQuantityOfProduct(cartId: number, productId: number, incrementByNumber: number): Promise<TMongoCartProductDocument>;
+    changeQuantityOfProduct(cartId: number, productId: number, incrementByNumber: number): Promise<UpdateWriteOpResult>;
 
     /**
      * Nastaví přesné množství produktu.
@@ -40,21 +40,21 @@ export interface ICartsRepo {
      * @param productId = Identifikátor produktu u kterého se nastaví množství.
      * @param newQuantity = Nové množství kusů daného produktu v košíku.
      */
-    setExactNumberOfQuantitiesOfProduct(cartId: number, productId: number, newQuantity: number): Promise<any>;
+    setExactNumberOfQuantitiesOfProduct(cartId: number, productId: number, newQuantity: number): Promise<UpdateWriteOpResult>;
 
     /**
      * Odstraní produkt z košíku.
      * @param cartId = Identifikátor pro nalezení košíku.
      * @param productId = Identifikátor produktu, který se odstraní.
      */
-    removeProductFromCart(cartId: number, productId: number): Promise<any>;
+    removeProductFromCart(cartId: number, productId: number): Promise<UpdateWriteOpResult>;
 
     /**
      * Nastaví v databázi záznam košíku na stav (true),
      * a to znamená, že si zákazník objednávku na poslední chvíli rozmyslel.
      * @param cartId = Identifikátor košíku.
      */
-    setIncompletePurchase(cartId: number): Promise<any>;
+    setIncompletePurchase(cartId: number): Promise<UpdateWriteOpResult>;
 
     /**
      * Vrací všechny košíky u kterých bylo zjištěno,

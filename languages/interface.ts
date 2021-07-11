@@ -2,5 +2,12 @@
  * Klíče pro překlady.
  */
 type TLanguagesKeys = {
-    resourceAlreadyExists: string;
+    productInCartAlreadyExists: string;
+    productAddedToCart: string;
+    resourceNotFound: string;
+    productQuantityIncrementedSuccessfully: string;
+    productQuantityDecrementedSuccessfully: string;
+    productQuantitySetSuccess: string;
+    productRemovedFromCartSuccess: string;
+    setCartIncompletePurchase: string;
 }

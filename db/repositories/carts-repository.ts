@@ -1,5 +1,5 @@
 import {ICartsRepo} from "./interfaces";
-import {UpdateQuery, WriteOpResult} from "mongodb";
+import { UpdateQuery, UpdateWriteOpResult, WriteOpResult} from "mongodb";
 const mongoDbClient = require("../connections/mongodb");
 
 /**
@@ -60,7 +60,7 @@ class CartsRepository implements ICartsRepo {
     }
 
     /** @inheritDoc */
-    public changeQuantityOfProduct(cartId: number,productId: number, incrementByNumber: number): Promise<TMongoCartProductDocument> {
+    public changeQuantityOfProduct(cartId: number,productId: number, incrementByNumber: number): Promise<UpdateWriteOpResult> {
         this.setMongoDb();
 
         const filter: TMongoCartDocument = {
@@ -77,7 +77,7 @@ class CartsRepository implements ICartsRepo {
     }
 
     /** @inheritDoc */
-    public setExactNumberOfQuantitiesOfProduct(cartId: number, productId: number, newQuantity: number): Promise<any> {
+    public setExactNumberOfQuantitiesOfProduct(cartId: number, productId: number, newQuantity: number): Promise<UpdateWriteOpResult> {
         this.setMongoDb();
 
         const filter: TMongoCartDocument = {
@@ -94,7 +94,7 @@ class CartsRepository implements ICartsRepo {
     }
 
     /** @inheritDoc */
-    public removeProductFromCart(cartId: number, productId: number): Promise<any> {
+    public removeProductFromCart(cartId: number, productId: number): Promise<UpdateWriteOpResult> {
         this.setMongoDb();
 
         const filter: TMongoCartDocument = {
@@ -109,7 +109,7 @@ class CartsRepository implements ICartsRepo {
     }
 
     /** @inheritDoc */
-    public setIncompletePurchase(cartId: number): Promise<any> {
+    public setIncompletePurchase(cartId: number): Promise<UpdateWriteOpResult> {
         this.setMongoDb();
 
         const filter: TMongoCartDocument = {
