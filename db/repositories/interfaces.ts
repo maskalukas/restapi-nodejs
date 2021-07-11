@@ -1,18 +1,7 @@
-import {Schema} from "inspector";
-
 export {};
-import {Cursor, WriteOpResult} from "mongodb";
+import {WriteOpResult} from "mongodb";
 
-/**
- * Interface pro repozitář produktů.
- */
-export interface IProductsRepo {
-    /**
-     * Vrací produkt podle identifikátoru.
-     * @param id = Identifikátor produktu.
-     */
-    getProduct(id: number): Promise<Product>;
-}
+
 
 /**
  * Interface pro repozitář košíků.

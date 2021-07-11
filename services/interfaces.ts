@@ -2,7 +2,9 @@ import {WriteOpResult} from "mongodb";
 
 export interface ICartsService {
     /**
-     * Přidání či navýšení produktu.
+     * Přidání produktu do košíku.
+     * Pokud košík neexistuje, tak se vytvoří.
+     * Pokud se produkt již v košíku nachází, nestane se nic.
      * @param cartId = Identifikátor pro nalezení košíku.
      * @param productId = Identifikátor produktu, který se přidá do košíku.
      */

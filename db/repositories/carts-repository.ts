@@ -1,6 +1,5 @@
 import {ICartsRepo} from "./interfaces";
-import {Cursor, UpdateQuery, WriteOpResult} from "mongodb";
-
+import {UpdateQuery, WriteOpResult} from "mongodb";
 const mongoDbClient = require("../connections/mongodb");
 
 /**
@@ -64,7 +63,10 @@ class CartsRepository implements ICartsRepo {
     public changeQuantityOfProduct(cartId: number,productId: number, incrementByNumber: number): Promise<TMongoCartProductDocument> {
         this.setMongoDb();
 
-        const filter: TMongoCartDocument = { cartId: cartId, "products.productId": productId };
+        const filter: TMongoCartDocument = {
+            cartId: cartId,
+            "products.productId": productId
+        };
         const incrementObject: UpdateQuery<TMongoCartDocument> = {
             $inc: { "products.$.quantity": incrementByNumber }
         }
@@ -94,6 +96,7 @@ class CartsRepository implements ICartsRepo {
     /** @inheritDoc */
     public removeProductFromCart(cartId: number, productId: number): Promise<any> {
         this.setMongoDb();
+
         const filter: TMongoCartDocument = {
             cartId: cartId
         };
@@ -109,7 +112,9 @@ class CartsRepository implements ICartsRepo {
     public setIncompletePurchase(cartId: number): Promise<any> {
         this.setMongoDb();
 
-        const filter: TMongoCartDocument = { cartId: cartId };
+        const filter: TMongoCartDocument = {
+            cartId: cartId
+        };
         const setObject: UpdateQuery<TMongoCartDocument> = {
             $set: {
                 incompletePurchase: true
@@ -131,7 +136,9 @@ class CartsRepository implements ICartsRepo {
             .toArray();
     }
 
-
+    /**
+     * Pouze nastavuje instanci na propoperty mongoDB zde ve třídě.
+     */
     private setMongoDb(): void {
         if(!this.mongoDb) {
             this.mongoDb = mongoDbClient.getDB();

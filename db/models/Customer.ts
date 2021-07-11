@@ -3,13 +3,6 @@
  * Slouží zde jen pro představu.
  */
 class Customer {
-    get email(): string {
-        return this._email;
-    }
-
-    set email(value: string) {
-        this._email = value;
-    }
     /**
      * Identifikátor zákazníka.
      */
@@ -22,6 +15,15 @@ class Customer {
      * Email zákazníka.
      */
     private _email: string;
+    
+    get email(): string {
+        return this._email;
+    }
+
+    set email(value: string) {
+        this._email = value;
+    }
+
 
     get id(): number {
         return this._id;

@@ -10,6 +10,9 @@ const CustomerService = require("./customers-service");
  */
 class CartsService implements ICartsService {
 
+    /**
+     * Databázový repozitář.
+     */
     private CartsRepo: ICartsRepo = new CartsRepository();
 
 
@@ -18,6 +21,7 @@ class CartsService implements ICartsService {
         const cartForUser = await this.createCartIfNotExists(cartId);
 
         if(cartForUser.products.some(product => product.productId === productId)) {
+            // Dokument už daný produkt obsahuje, a tak neprovádět žádnou akci.
             return new Promise((resolve) => resolve(null))
         } else {
             return this.CartsRepo.addProductToCart(cartId, productId);
@@ -94,7 +98,6 @@ class CartsService implements ICartsService {
         });
 
         // Zde bych pak odeslal email zákazníkovi, ale podle zadání to není potřeba.
-
         return new Promise(resolve => resolve(true));
     }
 }

@@ -2,19 +2,17 @@ export {};
 const express = require("express");
 const mysqlPool = require("./db/connections/mysql");
 const mongoDbClient = require("./db/connections/mongodb");
-const jobIncompletePurchases = require("./jobs/control-incomplete-purchases");
-
-// const jsonsProducts = require("./db/dataset/result.json");
-
+const jobControlIncompletePurchases = require("./jobs/control-incomplete-purchases");
 const cartsRoute = require("./routes/carts-route");
 
 const app = express();
 const port = 3000;
-// jobIncompletePurchases.start();
+app.listen(port);
+mongoDbClient.connectDB();
+// jobControlIncompletePurchases.start();
 
-app.listen(port,() => {
-    console.log("Started..+.");
-});
+// routes - products
+app.use('/v1/cart', cartsRoute);
 
 // ukočení připojení na databázi
 process.on('SIGINT', function () {
@@ -22,7 +20,3 @@ process.on('SIGINT', function () {
     mongoDbClient.close();
     process.exit(2);
 });
-
-
-// routes - products
-app.use('/v1/cart', cartsRoute);
