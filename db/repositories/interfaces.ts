@@ -18,13 +18,13 @@ interface ICartsRepo {
      * @param userId = Identifikátor košíku se vytvoří
      *                 podle identifikátoru uživatele.
      */
-    createCart(userId: number): Promise<Cart>;
+    createCart(userId: number): Promise<TMongoCarDocument>;
 
     /**
-     * Najde v kolekci uživatelovo košík.
+     * Najde v databázi uživatelovo košík.
      * @param userId = Identifikátor pro nalezení košíku.
      */
-    getCart(userId: number): Promise<Cart>;
+    getCartById(userId: number): Promise<TMongoCarDocument|null>;
 }
 
 /**

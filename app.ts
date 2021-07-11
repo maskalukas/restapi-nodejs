@@ -18,6 +18,7 @@ app.listen(port,() => {
 });
 
 app.get("/",async (req, res) => {
+    res.send(mongoDbClient.ranTest);
 })
 
 // ukočení připojení na databázi

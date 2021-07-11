@@ -2,6 +2,7 @@ const MongoClient = require("mongodb").MongoClient;
 
 const url = 'mongodb://localhost:27017/test';
 let _db, _client;
+let ranTest = Math.random().toString();
 
 const connectDB = async () => {
     try {
@@ -19,4 +20,4 @@ const close = () => _client.close();
 
 connectDB();
 
-module.exports = { connectDB, getDB, close }
+module.exports = { connectDB, getDB, close, ranTest }

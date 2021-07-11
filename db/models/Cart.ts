@@ -1,3 +1,4 @@
+export {};
 /**
  * Entita košíku
  */
@@ -38,3 +39,4 @@ class Cart {
     }
 }
 
+module.exports = Cart;
