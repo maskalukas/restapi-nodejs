@@ -9,3 +9,5 @@ class CustomersService {
         return new Promise(resolve => resolve([]));
     }
 }
+
+module.exports = CustomersService;

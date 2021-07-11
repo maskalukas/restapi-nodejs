@@ -140,7 +140,17 @@ class CartsController {
         }
     }
 
+    public async getAllIncompletePurchases(req,res,next) {
+        let result: TMongoCartDocument[] = [];
 
+        try {
+            result = await this.CartsService.getAllIncompletePurchaseCarts();
+        } catch (err) {
+            console.error(err)
+        }
+
+        res.send(result);
+    }
 }
 
 module.exports = CartsController;
