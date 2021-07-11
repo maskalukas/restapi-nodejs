@@ -6,4 +6,6 @@ type TMongoCartProductDocument = {
 type TMongoCartDocument = {
     userId?: number;
     products?: TMongoCartProductDocument[];
+
+    "products.productId"?: number;
 }

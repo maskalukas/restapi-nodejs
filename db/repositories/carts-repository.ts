@@ -1,5 +1,6 @@
 import {ICartsRepo} from "./interfaces";
-import {PushOperator, UpdateQuery, WriteOpResult} from "mongodb";
+import { UpdateQuery, WriteOpResult} from "mongodb";
+import {IUserService} from "../../services/interfaces";
 
 const mongoDbClient = require("../connections/mongodb");
 
@@ -15,6 +16,12 @@ class CartsRepository implements ICartsRepo {
      * Název kolekce košíků v mongodb.
      */
     private readonly collectionName = "carts";
+
+    private UserService: IUserService;
+
+    public constructor(UserService: IUserService) {
+        this.UserService = UserService;
+    }
 
 
     /** @inheritdoc */
@@ -53,6 +60,19 @@ class CartsRepository implements ICartsRepo {
 
         return this.mongoDb.collection(this.collectionName).updateOne(filter, pushObject)
     }
+
+    /** @inheritDoc */
+    public changeQuantityOfProduct(productId: number, incrementByNumber: number): Promise<TMongoCartProductDocument> {
+        const userId = this.UserService.getUserId();
+
+        const filter: TMongoCartDocument = { userId: userId, "products.productId": 50 };
+        const incrementObject: UpdateQuery<TMongoCartDocument> = {
+            $inc: { "products.$.quantity": incrementByNumber }
+        }
+        
+        return this.mongoDb.collection(this.collectionName).updateOne(filter, incrementObject);
+    }
+
 
 }
 

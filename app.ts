@@ -1,3 +1,5 @@
+import {IUserService} from "./services/interfaces";
+
 export {};
 const express = require("express");
 const mysqlPool = require("./db/connections/mysql");
@@ -7,10 +9,17 @@ const mongoDbClient = require("./db/connections/mongodb");
 //const jsonsCustomers = require("./db/dataset/customers.json");
 
 const cartsRoute = require("./routes/carts-route");
+const UserService = require("./services/user-service");
 
 
 const app = express();
 const port = 3000;
+
+app.use("/",(req, res, next) => {
+    const UserServiceObj: IUserService = UserService.getInstance();
+    UserServiceObj.setUserId(125);
+    next();
+})
 
 
 app.listen(port,() => {
@@ -30,4 +39,4 @@ process.on('SIGINT', function () {
 
 
 // routes - products
-app.use('/carts', cartsRoute);
+app.use('/v1/carts', cartsRoute);

@@ -13,4 +13,20 @@ export interface ICartsService {
      * @param userId = Identifikátor košíku.
      */
     createCartIfNotExists(userId: number): Promise<WriteOpResult|TMongoCartDocument>;
+    /**
+     * Navýšení množství produktu o 1.
+     * @param productId = Identifikátor produktu, u kterého proběhně navýšení množství.
+     */
+    increaseQuantityOfProductByOne(productId: number): Promise<TMongoCartProductDocument>;
+
+    /**
+     * Snížení množství produktu o 1.
+     * @param productId = Identifikátor produktu, u kterého proběhně snížení množství.
+     */
+    decreaseQuantityOfProductByOne(productId: number): Promise<TMongoCartProductDocument>;
+}
+
+export interface IUserService {
+    setUserId(userId: number);
+    getUserId(): number;
 }

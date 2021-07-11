@@ -1,5 +1,5 @@
 import {ICartsService} from "../services/interfaces";
-const Translator = require("../languages/translator");
+const Translator = require("../services/translator");
 export {};
 
 class CartsController {
@@ -12,9 +12,15 @@ class CartsController {
 
     public async addProduct(req, res, next) {
         const result = await this.CartsService.addProductToCart(130, 53);
+        res.send(result);
+    }
+
+    public async increaseQuantity(req, res, next) {
+        const result = await  this.CartsService.increaseQuantityOfProductByOne(52);
 
         res.send(result);
     }
+
 
 }
 

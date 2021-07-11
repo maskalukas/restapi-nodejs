@@ -1,3 +1,5 @@
+import {Schema} from "inspector";
+
 export {};
 import {WriteOpResult} from "mongodb";
 
@@ -35,6 +37,13 @@ export interface ICartsRepo {
      * @param productId = Identifikátor produktu, který se vloží do košíku.
      */
     addProductToCart(userId: number, productId: number): Promise<TMongoCartDocument>;
+
+    /**
+     * Navýšení množství produktu o 1.
+     * @param productId = Identifikátor produktu, u kterého proběhně navýšení množství.
+     * @param incrementByNumber = O toto číslo se dané množství navýší či sníží.
+     */
+    changeQuantityOfProduct(productId: number, incrementByNumber: number): Promise<TMongoCartProductDocument>;
 }
 
 /**
@@ -47,3 +56,4 @@ export interface IUserRepo {
      */
     getUserById(userId: number): Promise<Customer>;
 }
+
