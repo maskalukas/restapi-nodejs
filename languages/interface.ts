@@ -1,0 +1,3 @@
+type TLanguagesKeys = {
+    resourceAlreadyExists: string;
+}

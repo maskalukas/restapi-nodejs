@@ -28,6 +28,13 @@ export interface ICartsRepo {
      * @param userId = Identifikátor pro nalezení košíku.
      */
     getCartById(userId: number): Promise<TMongoCartDocument|null>;
+
+    /**
+     * Přidání nového produktu do košíku.
+     * @param userId = Identifikátor pro nalezení košíku.
+     * @param productId = Identifikátor produktu, který se vloží do košíku.
+     */
+    addProductToCart(userId: number, productId: number): Promise<TMongoCartDocument>;
 }
 
 /**

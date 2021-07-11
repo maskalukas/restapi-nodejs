@@ -1,8 +1,7 @@
 import {ICartsRepo} from "./interfaces";
-import {WriteOpResult} from "mongodb";
+import {PushOperator, UpdateQuery, WriteOpResult} from "mongodb";
 
 const mongoDbClient = require("../connections/mongodb");
-const Cart = require("../models/Cart");
 
 /**
  * Třída pro interakce s databází košíků.
@@ -23,7 +22,7 @@ class CartsRepository implements ICartsRepo {
         this.mongoDb = mongoDbClient.getDB();
 
         const cartDocument: TMongoCartDocument = {
-            '_userId': userId
+            'userId': userId
         }
 
         return this.mongoDb.collection(this.collectionName).findOne(cartDocument);
@@ -31,11 +30,30 @@ class CartsRepository implements ICartsRepo {
 
     /** @inheritdoc */
     public createCart(userId: number): Promise<WriteOpResult> {
-        const NewCart = new Cart();
-        NewCart.userId = userId;
+        this.mongoDb = mongoDbClient.getDB();
+
+        const NewCart: TMongoCartDocument = {
+            userId: userId,
+            products: []
+        }
 
         return this.mongoDb.collection(this.collectionName).insertOne(NewCart)
     }
+
+    /** @inheritDoc */
+    addProductToCart(userId: number, productId: number): Promise<TMongoCartDocument> {
+        this.mongoDb = mongoDbClient.getDB();
+
+        const filter: TMongoCartDocument = { userId: userId };
+        const pushObject: UpdateQuery<TMongoCartDocument> = {
+            $push: {
+                products: { quantity: 1, productId: productId }
+            }
+        };
+
+        return this.mongoDb.collection(this.collectionName).updateOne(filter, pushObject)
+    }
+
 }
 
 module.exports = CartsRepository;

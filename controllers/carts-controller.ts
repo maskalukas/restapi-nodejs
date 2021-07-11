@@ -1,7 +1,5 @@
 import {ICartsService} from "../services/interfaces";
-import {WriteOpResult} from "mongodb";
-import {deflateRawSync} from "zlib";
-
+const Translator = require("../languages/translator");
 export {};
 
 class CartsController {
@@ -13,13 +11,9 @@ class CartsController {
     }
 
     public async addProduct(req, res, next) {
-        const cartResult = await this.CartsService.createCartIfNotExists(25);
+        const result = await this.CartsService.addProductToCart(130, 53);
 
-        if(cartResult) {
-        }  else {
-            res.status(409);
-            res.send("Již existuje");
-        }
+        res.send(result);
     }
 
 }
