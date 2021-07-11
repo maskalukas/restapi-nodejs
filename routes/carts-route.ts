@@ -7,7 +7,7 @@ const initRouters = () => {
     const CartsServiceIns = new CartsService();
     const CartControllerIns = new CartsController(CartsServiceIns);
 
-
+    router.get("/all", CartControllerIns.test.bind(CartControllerIns));
     router.post("/:cartId/product/:productId",  CartControllerIns.addProduct.bind(CartControllerIns));
     router.put("/:cartId/incompletepurchase", CartControllerIns.setIncompletePurchase.bind(CartControllerIns));
     router.put("/:cartId/product/:productId/increment", CartControllerIns.increaseQuantity.bind(CartControllerIns));

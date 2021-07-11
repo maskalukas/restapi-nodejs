@@ -47,6 +47,16 @@ export interface ICartsService {
      * a to znamená, že si zákazník objednávku na poslední chvíli rozmyslel.
      * @param cartId = Identifikátor košíku.
      */
-    setIncompletePurchase(cartId: number): Promise<any>
+    setIncompletePurchase(cartId: number): Promise<any>;
+    /**
+     * Vrací všechny košíky u kterých bylo zjištěno,
+     * že zákazník nedokončíl objednávku.
+     */
+    getAllIncompletePurchaseCarts(): Promise<TMongoCartDocument[]>;
+
+    /**
+     * Informuje emailem zákazníka, že má nedokončenou objednávku.
+     */
+    informCustomersAboutIncomplePurchase(): Promise<boolean>;
 }
 

@@ -3,6 +3,7 @@ import {WriteOpResult} from "mongodb";
 import {ICartsService} from "./interfaces";
 export {};
 const CartsRepository = require("../db/repositories/carts-repository");
+const CustomerService = require("./customers-service");
 
 /**
  * Služba pro košíky.
@@ -74,7 +75,28 @@ class CartsService implements ICartsService {
         return this.CartsRepo.setIncompletePurchase(cartId);
     }
 
+    /** @inheritDoc */
+    public getAllIncompletePurchaseCarts(): Promise<TMongoCartDocument[]> {
+        return this.CartsRepo.getAllIncompletePurchaseCarts();
+    }
 
+    /** Pouze ukázková metoda! */
+    public async informCustomersAboutIncomplePurchase(): Promise<boolean>  {
+        const CustomersServiceIns = new CustomersService();
+
+        const incompletePurchaseCarts = await this.getAllIncompletePurchaseCarts();
+        const customersIds = incompletePurchaseCarts.map(x => x.cartId);
+
+        const customers = await CustomersServiceIns.getCustomersByIds(customersIds);
+
+        const customersEmails = customers.map(customer => {
+            return "customer-email";
+        });
+
+        // Zde bych pak odeslal email zákazníkovi, ale podle zadání to není potřeba.
+
+        return new Promise(resolve => resolve(true));
+    }
 }
 
 module.exports = CartsService;

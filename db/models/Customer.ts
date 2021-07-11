@@ -1,7 +1,15 @@
 /**
  * Entita uživatele.
+ * Slouží zde jen pro představu.
  */
 class Customer {
+    get email(): string {
+        return this._email;
+    }
+
+    set email(value: string) {
+        this._email = value;
+    }
     /**
      * Identifikátor zákazníka.
      */
@@ -10,6 +18,10 @@ class Customer {
      * Jméno zákazníka.
      */
     private _name: string;
+    /**
+     * Email zákazníka.
+     */
+    private _email: string;
 
     get id(): number {
         return this._id;

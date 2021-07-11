@@ -1,7 +1,7 @@
 import {Schema} from "inspector";
 
 export {};
-import {WriteOpResult} from "mongodb";
+import {Cursor, WriteOpResult} from "mongodb";
 
 /**
  * Interface pro repozitář produktů.
@@ -65,7 +65,13 @@ export interface ICartsRepo {
      * a to znamená, že si zákazník objednávku na poslední chvíli rozmyslel.
      * @param cartId = Identifikátor košíku.
      */
-    setIncompletePurchase(cartId: number): Promise<any>
+    setIncompletePurchase(cartId: number): Promise<any>;
+
+    /**
+     * Vrací všechny košíky u kterých bylo zjištěno,
+     * že zákazník nedokončíl objednávku.
+     */
+    getAllIncompletePurchaseCarts(): Promise<TMongoCartDocument[]>;
 }
 
 

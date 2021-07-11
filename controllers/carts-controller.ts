@@ -40,6 +40,12 @@ class CartsController {
         res.send(result);
     }
 
+    public async test(req,res,next) {
+        const rs = await this.CartsService.getAllIncompletePurchaseCarts();
+
+        res.send("cus");
+    }
+
 
 }
 

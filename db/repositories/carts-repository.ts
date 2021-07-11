@@ -1,5 +1,5 @@
 import {ICartsRepo} from "./interfaces";
-import { UpdateQuery, WriteOpResult} from "mongodb";
+import {Cursor, UpdateQuery, WriteOpResult} from "mongodb";
 
 const mongoDbClient = require("../connections/mongodb");
 
@@ -24,7 +24,9 @@ class CartsRepository implements ICartsRepo {
             'cartId': cartId
         }
 
-        return this.mongoDb.collection(this.collectionName).findOne(cartDocument);
+        return this.mongoDb
+            .collection(this.collectionName)
+            .findOne(cartDocument);
     }
 
     /** @inheritdoc */
@@ -37,7 +39,9 @@ class CartsRepository implements ICartsRepo {
             incompletePurchase: null
         }
 
-        return this.mongoDb.collection(this.collectionName).insertOne(NewCart)
+        return this.mongoDb
+            .collection(this.collectionName)
+            .insertOne(NewCart)
     }
 
     /** @inheritDoc */
@@ -51,7 +55,9 @@ class CartsRepository implements ICartsRepo {
             }
         };
 
-        return this.mongoDb.collection(this.collectionName).updateOne(filter, pushObject)
+        return this.mongoDb
+            .collection(this.collectionName)
+            .updateOne(filter, pushObject)
     }
 
     /** @inheritDoc */
@@ -63,7 +69,9 @@ class CartsRepository implements ICartsRepo {
             $inc: { "products.$.quantity": incrementByNumber }
         }
 
-        return this.mongoDb.collection(this.collectionName).updateOne(filter, incrementObject);
+        return this.mongoDb
+            .collection(this.collectionName)
+            .updateOne(filter, incrementObject);
     }
 
     /** @inheritDoc */
@@ -78,7 +86,9 @@ class CartsRepository implements ICartsRepo {
             $set: { "products.$.quantity": newQuantity }
         }
 
-        return this.mongoDb.collection(this.collectionName).updateOne(filter, setObject);
+        return this.mongoDb
+            .collection(this.collectionName)
+            .updateOne(filter, setObject);
     }
 
     /** @inheritDoc */
@@ -90,7 +100,9 @@ class CartsRepository implements ICartsRepo {
         const pullObject: UpdateQuery<TMongoCartDocument> = {
             $pull: { products: { productId: productId } }
         }
-        return this.mongoDb.collection(this.collectionName).updateOne(filter, pullObject);
+        return this.mongoDb
+            .collection(this.collectionName)
+            .updateOne(filter, pullObject);
     }
 
     /** @inheritDoc */
@@ -104,12 +116,26 @@ class CartsRepository implements ICartsRepo {
             }
         }
 
-        return this.mongoDb.collection(this.collectionName).updateOne(filter, setObject)
+        return this.mongoDb
+            .collection(this.collectionName)
+            .updateOne(filter, setObject)
+    }
+
+    /** @inheritDoc */
+    public getAllIncompletePurchaseCarts(): Promise<TMongoCartDocument[]> {
+        this.setMongoDb();
+
+        return this.mongoDb
+            .collection(this.collectionName)
+            .find({ incompletePurchase: true } as TMongoCartDocument)
+            .toArray();
     }
 
 
     private setMongoDb(): void {
-        this.mongoDb = mongoDbClient.getDB();
+        if(!this.mongoDb) {
+            this.mongoDb = mongoDbClient.getDB();
+        }
     }
 
 
