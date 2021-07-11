@@ -19,48 +19,46 @@ export interface IProductsRepo {
  */
 export interface ICartsRepo {
     /**
-     * Vytvoření nového košíku.
-     * @param userId = Identifikátor košíku se vytvoří
-     *                 podle identifikátoru uživatele.
+     * Vytvoří nový košík.
+     * @param cartId = Identifikátor košíku;
      */
-    createCart(userId: number): Promise<WriteOpResult>;
+    createCart(cartId: number): Promise<WriteOpResult>;
 
     /**
      * Najde v databázi uživatelovo košík.
-     * @param userId = Identifikátor pro nalezení košíku.
+     * @param cartId = Identifikátor pro nalezení košíku.
      */
-    getCartById(userId: number): Promise<TMongoCartDocument|null>;
+    getCartById(cartId: number): Promise<TMongoCartDocument|null>;
 
     /**
-     * Přidání nového produktu do košíku.
-     * @param userId = Identifikátor pro nalezení košíku.
+     * Přidá nový produktu do košíku.
+     * @param cartId = Identifikátor pro nalezení košíku.
      * @param productId = Identifikátor produktu, který se vloží do košíku.
      */
-    addProductToCart(userId: number, productId: number): Promise<TMongoCartDocument>;
+    addProductToCart(cartId: number, productId: number): Promise<TMongoCartDocument>;
 
     /**
-     * Navýšení množství produktu o nastavené číslo.
+     * Navýší množství produktu o nastavené číslo.
+     * @param cartId = Identifikátor pro nalezení košíku.
      * @param productId = Identifikátor produktu, u kterého proběhně navýšení množství.
      * @param incrementByNumber = O toto číslo se dané množství navýší či sníží.
      */
-    changeQuantityOfProduct(productId: number, incrementByNumber: number): Promise<TMongoCartProductDocument>;
+    changeQuantityOfProduct(cartId: number, productId: number, incrementByNumber: number): Promise<TMongoCartProductDocument>;
 
     /**
      * Nastaví přesné množství produktu.
+     * @param cartId = Identifikátor pro nalezení košíku.
      * @param productId = Identifikátor produktu u kterého se nastaví množství.
      * @param newQuantity = Nové množství kusů daného produktu v košíku.
      */
-    setExactNumberOfQuantitiesOfProduct(productId: number, newQuantity: number): Promise<any>;
+    setExactNumberOfQuantitiesOfProduct(cartId: number, productId: number, newQuantity: number): Promise<any>;
+
+    /**
+     * Odstraní produkt z košíku.
+     * @param cartId = Identifikátor pro nalezení košíku.
+     * @param productId = Identifikátor produktu, který se odstraní.
+     */
+    removeProductFromCart(cartId: number, productId: number): Promise<any>;
 }
 
-/**
- * Interface pro repozitář
- */
-export interface IUserRepo {
-    /**
-     * Vrací zákazníka podle jeho identifikátoru.
-     * @param userId = Identifikátor zákazníka.
-     */
-    getUserById(userId: number): Promise<Customer>;
-}
 

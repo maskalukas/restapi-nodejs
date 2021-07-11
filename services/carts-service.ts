@@ -1,6 +1,6 @@
 import {ICartsRepo} from "../db/repositories/interfaces";
 import {WriteOpResult} from "mongodb";
-import {ICartsService, IUserService} from "./interfaces";
+import {ICartsService} from "./interfaces";
 export {};
 const CartsRepository = require("../db/repositories/carts-repository");
 
@@ -9,38 +9,32 @@ const CartsRepository = require("../db/repositories/carts-repository");
  */
 class CartsService implements ICartsService {
 
-    private UserService: IUserService;
+    private CartsRepo: ICartsRepo = new CartsRepository();
 
-    private CartsRepo: ICartsRepo;
-
-    public constructor(UserService: IUserService) {
-        this.UserService = UserService;
-        this.CartsRepo = new CartsRepository(UserService);
-    }
 
     /** @inheritDoc **/
-    public async addProductToCart(userId: number, productId: number): Promise<any> {
-        const cartForUser = await this.createCartIfNotExists(userId);
+    public async addProductToCart(cartId: number, productId: number): Promise<any> {
+        const cartForUser = await this.createCartIfNotExists(cartId);
 
         if(cartForUser.products.some(product => product.productId === productId)) {
 
         } else {
-            return  await this.CartsRepo.addProductToCart(userId, productId);
+            return  await this.CartsRepo.addProductToCart(cartId, productId);
         }
     }
 
     /** @inheritDoc **/
-    public async createCartIfNotExists(userId: number): Promise<TMongoCartDocument> {
-        let cart: TMongoCartDocument = await this.CartsRepo.getCartById(userId);
+    public async createCartIfNotExists(cartId: number): Promise<TMongoCartDocument> {
+        let cart: TMongoCartDocument = await this.CartsRepo.getCartById(cartId);
 
         if(!cart) {
-            const newCart = await this.CartsRepo.createCart(userId);
+            const newCart = await this.CartsRepo.createCart(cartId);
             const ops: TMongoCartDocument[] = newCart.ops;
 
             if(ops.length > 0) {
                 return new Promise((resolve) => {
                     resolve({
-                        userId: ops[0].userId,
+                        cartId: ops[0].cartId,
                         products: ops[0].products
                     })
                 });
@@ -48,7 +42,7 @@ class CartsService implements ICartsService {
         } else {
             return new Promise((resolve, reject) => {
                 resolve({
-                    userId: cart.userId,
+                    userId: cart.cartId,
                     products: cart.products
                 } as TMongoCartDocument);
             })
@@ -56,18 +50,23 @@ class CartsService implements ICartsService {
     }
 
     /** @inheritDoc */
-    public increaseQuantityOfProductByOne(productId: number): Promise<TMongoCartProductDocument> {
-        return this.CartsRepo.changeQuantityOfProduct(productId, 1);
+    public increaseQuantityOfProductByOne(cartId: number, productId: number): Promise<TMongoCartProductDocument> {
+        return this.CartsRepo.changeQuantityOfProduct(cartId,productId, 1);
     }
 
     /** @inheritDoc */
-    public decreaseQuantityOfProductByOne(productId: number):  Promise<TMongoCartProductDocument> {
-        return this.CartsRepo.changeQuantityOfProduct(productId, -1);
+    public decreaseQuantityOfProductByOne(cartId: number,productId: number):  Promise<TMongoCartProductDocument> {
+        return this.CartsRepo.changeQuantityOfProduct(cartId,productId, -1);
     }
 
     /** @inheritDoc */
-    setExactNumberOfQuantitiesOfProduct(productId: number, newQuantity: number): Promise<any> {
-        return this.CartsRepo.setExactNumberOfQuantitiesOfProduct(productId, newQuantity);
+    public setExactNumberOfQuantitiesOfProduct(cartId: number,productId: number, newQuantity: number): Promise<any> {
+        return this.CartsRepo.setExactNumberOfQuantitiesOfProduct(cartId,productId, newQuantity);
+    }
+
+    /** @inheritDoc */
+    public removeProductFromCart(cartId: number,productId: number): Promise<any> {
+        return this.CartsRepo.removeProductFromCart(cartId,productId);
     }
 
 

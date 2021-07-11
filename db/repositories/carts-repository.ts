@@ -1,6 +1,5 @@
 import {ICartsRepo} from "./interfaces";
 import { UpdateQuery, WriteOpResult} from "mongodb";
-import {IUserService} from "../../services/interfaces";
 
 const mongoDbClient = require("../connections/mongodb");
 
@@ -17,30 +16,23 @@ class CartsRepository implements ICartsRepo {
      */
     private readonly collectionName = "carts";
 
-    private UserService: IUserService;
-
-    public constructor(UserService: IUserService) {
-        this.UserService = UserService;
-    }
-
-
     /** @inheritdoc */
-    public getCartById(userId: number): Promise<TMongoCartDocument|null> {
-        this.mongoDb = mongoDbClient.getDB();
+    public getCartById(cartId: number): Promise<TMongoCartDocument|null> {
+        this.setMongoDb();
 
         const cartDocument: TMongoCartDocument = {
-            'userId': userId
+            'cartId': cartId
         }
 
         return this.mongoDb.collection(this.collectionName).findOne(cartDocument);
     }
 
     /** @inheritdoc */
-    public createCart(userId: number): Promise<WriteOpResult> {
-        this.mongoDb = mongoDbClient.getDB();
+    public createCart(cartId: number): Promise<WriteOpResult> {
+        this.setMongoDb();
 
         const NewCart: TMongoCartDocument = {
-            userId: userId,
+            cartId: cartId,
             products: []
         }
 
@@ -48,10 +40,10 @@ class CartsRepository implements ICartsRepo {
     }
 
     /** @inheritDoc */
-    addProductToCart(userId: number, productId: number): Promise<TMongoCartDocument> {
-        this.mongoDb = mongoDbClient.getDB();
+    public addProductToCart(cartId: number, productId: number): Promise<TMongoCartDocument> {
+        this.setMongoDb();
 
-        const filter: TMongoCartDocument = { userId: userId };
+        const filter: TMongoCartDocument = { cartId: cartId };
         const pushObject: UpdateQuery<TMongoCartDocument> = {
             $push: {
                 products: { quantity: 1, productId: productId }
@@ -62,11 +54,10 @@ class CartsRepository implements ICartsRepo {
     }
 
     /** @inheritDoc */
-    public changeQuantityOfProduct(productId: number, incrementByNumber: number): Promise<TMongoCartProductDocument> {
-        this.mongoDb = mongoDbClient.getDB();
-        const userId = this.UserService.getUserId();
+    public changeQuantityOfProduct(cartId: number,productId: number, incrementByNumber: number): Promise<TMongoCartProductDocument> {
+        this.setMongoDb();
 
-        const filter: TMongoCartDocument = { userId: userId, "products.productId": productId };
+        const filter: TMongoCartDocument = { cartId: cartId, "products.productId": productId };
         const incrementObject: UpdateQuery<TMongoCartDocument> = {
             $inc: { "products.$.quantity": incrementByNumber }
         }
@@ -75,11 +66,13 @@ class CartsRepository implements ICartsRepo {
     }
 
     /** @inheritDoc */
-    public setExactNumberOfQuantitiesOfProduct(productId: number, newQuantity: number): Promise<any> {
-        this.mongoDb = mongoDbClient.getDB();
-        const userId = this.UserService.getUserId();
+    public setExactNumberOfQuantitiesOfProduct(cartId: number, productId: number, newQuantity: number): Promise<any> {
+        this.setMongoDb();
 
-        const filter: TMongoCartDocument = { userId: userId, "products.productId": productId };
+        const filter: TMongoCartDocument = {
+            cartId: cartId,
+            "products.productId": productId
+        };
         const setObject: UpdateQuery<TMongoCartDocument> = {
             $set: { "products.$.quantity": newQuantity }
         }
@@ -87,7 +80,22 @@ class CartsRepository implements ICartsRepo {
         return this.mongoDb.collection(this.collectionName).updateOne(filter, setObject);
     }
 
+    /** @inheritDoc */
+    public removeProductFromCart(cartId: number, productId: number): Promise<any> {
+        this.setMongoDb();
+        const filter: TMongoCartDocument = {
+            cartId: cartId
+        };
+        const pullObject: UpdateQuery<TMongoCartDocument> = {
+            $pull: { products: { productId: productId } }
+        }
+        return this.mongoDb.collection(this.collectionName).updateOne(filter, pullObject);
+    }
 
+
+    private setMongoDb(): void {
+        this.mongoDb = mongoDbClient.getDB();
+    }
 
 
 }
