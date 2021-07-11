@@ -17,7 +17,7 @@ const port = 3000;
 
 app.use("/",(req, res, next) => {
     const UserServiceObj: IUserService = UserService.getInstance();
-    UserServiceObj.setUserId(125);
+    UserServiceObj.setUserId(5);
     next();
 })
 

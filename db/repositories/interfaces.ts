@@ -39,11 +39,18 @@ export interface ICartsRepo {
     addProductToCart(userId: number, productId: number): Promise<TMongoCartDocument>;
 
     /**
-     * Navýšení množství produktu o 1.
+     * Navýšení množství produktu o nastavené číslo.
      * @param productId = Identifikátor produktu, u kterého proběhně navýšení množství.
      * @param incrementByNumber = O toto číslo se dané množství navýší či sníží.
      */
     changeQuantityOfProduct(productId: number, incrementByNumber: number): Promise<TMongoCartProductDocument>;
+
+    /**
+     * Nastaví přesné množství produktu.
+     * @param productId = Identifikátor produktu u kterého se nastaví množství.
+     * @param newQuantity = Nové množství kusů daného produktu v košíku.
+     */
+    setExactNumberOfQuantitiesOfProduct(productId: number, newQuantity: number): Promise<any>;
 }
 
 /**

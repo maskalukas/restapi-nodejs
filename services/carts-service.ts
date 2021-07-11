@@ -11,10 +11,11 @@ class CartsService implements ICartsService {
 
     private UserService: IUserService;
 
-    private CartsRepo: ICartsRepo = new CartsRepository();
+    private CartsRepo: ICartsRepo;
 
     public constructor(UserService: IUserService) {
         this.UserService = UserService;
+        this.CartsRepo = new CartsRepository(UserService);
     }
 
     /** @inheritDoc **/
@@ -62,6 +63,11 @@ class CartsService implements ICartsService {
     /** @inheritDoc */
     public decreaseQuantityOfProductByOne(productId: number):  Promise<TMongoCartProductDocument> {
         return this.CartsRepo.changeQuantityOfProduct(productId, -1);
+    }
+
+    /** @inheritDoc */
+    setExactNumberOfQuantitiesOfProduct(productId: number, newQuantity: number): Promise<any> {
+        return this.CartsRepo.setExactNumberOfQuantitiesOfProduct(productId, newQuantity);
     }
 
 

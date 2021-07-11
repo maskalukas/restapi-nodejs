@@ -7,14 +7,16 @@ const CartsService = require("../services/carts-service");
 const UserService = require("../services/user-service");
 
 const initRouters = () => {
-    const UserServiceObj: IUserService = UserService.getInstance();
-    const CartsServiceObj = new CartsService(UserServiceObj);
-    const CartControllerObj = new CartsController(CartsServiceObj);
+    const UserServiceIns: IUserService = UserService.getInstance();
 
-    router.get("/v1/",  CartControllerObj.addProduct.bind(CartControllerObj));
-    router.get("/v1",  () => {
-        console.log("cau")
-    });
+    const CartsServiceIns = new CartsService(UserServiceIns);
+    const CartControllerIns = new CartsController(CartsServiceIns);
+
+
+    router.get("/v1/",  CartControllerIns.addProduct.bind(CartControllerIns));
+    router.put("/:id/increment", CartControllerIns.increaseQuantity.bind(CartControllerIns));
+    router.put("/:id/decrement", CartControllerIns.decreaseQuantity.bind(CartControllerIns));
+    router.put("/:productId/quantity/:number", CartControllerIns.setNumberOfQuantity.bind(CartControllerIns))
 }
 initRouters();
 

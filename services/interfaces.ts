@@ -24,6 +24,13 @@ export interface ICartsService {
      * @param productId = Identifikátor produktu, u kterého proběhně snížení množství.
      */
     decreaseQuantityOfProductByOne(productId: number): Promise<TMongoCartProductDocument>;
+
+    /**
+     * Nastaví přesně nové množství kusů produktu v košíku.
+     * @param productId = Identifikátor produktu u kterého proběhne nastavní množství.
+     * @param newQuantity = Číslo na kolik se nastaví množství.
+     */
+    setExactNumberOfQuantitiesOfProduct(productId: number, newQuantity: number): Promise<any>;
 }
 
 export interface IUserService {

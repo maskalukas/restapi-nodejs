@@ -1,4 +1,5 @@
 import {ICartsService} from "../services/interfaces";
+import {Request} from "express";
 const Translator = require("../services/translator");
 export {};
 
@@ -16,8 +17,17 @@ class CartsController {
     }
 
     public async increaseQuantity(req, res, next) {
-        const result = await  this.CartsService.increaseQuantityOfProductByOne(52);
+        const result = await  this.CartsService.increaseQuantityOfProductByOne(req.params.productId);
+        res.send(result);
+    }
 
+    public async decreaseQuantity(req, res, next) {
+        const result = await this.CartsService.decreaseQuantityOfProductByOne(req.params.productId);
+        res.send(result);
+    }
+
+    public async setNumberOfQuantity(req, res, next) {
+        const result = await this.CartsService.setExactNumberOfQuantitiesOfProduct(Number(req.params.productId), Number(req.params.number));
         res.send(result);
     }
 

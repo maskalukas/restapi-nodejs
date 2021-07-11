@@ -63,15 +63,31 @@ class CartsRepository implements ICartsRepo {
 
     /** @inheritDoc */
     public changeQuantityOfProduct(productId: number, incrementByNumber: number): Promise<TMongoCartProductDocument> {
+        this.mongoDb = mongoDbClient.getDB();
         const userId = this.UserService.getUserId();
 
-        const filter: TMongoCartDocument = { userId: userId, "products.productId": 50 };
+        const filter: TMongoCartDocument = { userId: userId, "products.productId": productId };
         const incrementObject: UpdateQuery<TMongoCartDocument> = {
             $inc: { "products.$.quantity": incrementByNumber }
         }
-        
+
         return this.mongoDb.collection(this.collectionName).updateOne(filter, incrementObject);
     }
+
+    /** @inheritDoc */
+    public setExactNumberOfQuantitiesOfProduct(productId: number, newQuantity: number): Promise<any> {
+        this.mongoDb = mongoDbClient.getDB();
+        const userId = this.UserService.getUserId();
+
+        const filter: TMongoCartDocument = { userId: userId, "products.productId": productId };
+        const setObject: UpdateQuery<TMongoCartDocument> = {
+            $set: { "products.$.quantity": newQuantity }
+        }
+
+        return this.mongoDb.collection(this.collectionName).updateOne(filter, setObject);
+    }
+
+
 
 
 }
