@@ -5,6 +5,7 @@ Kvůli nedostatku času mi chybí dodělat:
     - Ověřování uživatelů.
     - Ověřování existence produktů, který se vkládají do košíků.
     - Prevence proti injections a DDoS útokům.
+    - Role,...
 
 
 Docker
@@ -23,7 +24,7 @@ document: {
   products: { quantity: number, productId: number }, 
   incompletePurchase: null|true 
 }
-  - incompletePurchase:
+  incompletePurchase:
         null = Zákazník ještě ani nezkusil objednávku potvrdit.
         true = Zákazník před posláním objednávky odešel.
 
@@ -34,34 +35,34 @@ Prohledává nedokončené objednávky a daným zákazníkům odesílá email.
 
 API
 ---------
-- :cartId = userId
-- Routy se nachází v souborech routes/*.
+cartId = userId
+Routy se nachází v souborech routes/*.
 ---------
 API pro jeden košík:
 ---------
     - POST: 
-        - **Přidání produktu do košíku.
-            - v1/cart/:cartId/product/:productId**
+        - Přidání produktu do košíku.
+            - v1/cart/:cartId/product/:productId
             - Pokud košík neexistuje, tak se vytvoří.
                 - Kdyby zákazník potvrdil objednávku, tak by se košík odstranil. 
                     - Potvrzení objednávky není implementování.
 
     - PUT: 
-        - **Navýšení počtu kusů v košíku u určitého produktu o 1.
-            - v1/cart/:cartId/product/:productId/increment**
+        - Navýšení počtu kusů v košíku u určitého produktu o 1.
+            - v1/cart/:cartId/product/:productId/increment
 
-        - **Snížení počtu kusů v košíku u určitího produktu o 1.
-            - v1/cart/:cartId/product/:productId/decrement**
+        - Snížení počtu kusů v košíku u určitího produktu o 1.
+            - v1/cart/:cartId/product/:productId/decrement
 
-        - **Nastavení určitého množství v určitém košíku u daného produktu.
-            - v1/cart/:cartId/product/:productId/quantity/:number**
+        - Nastavení určitého množství v určitém košíku u daného produktu.
+            - v1/cart/:cartId/product/:productId/quantity/:number
                 - :number = Nový počet kusů.
     - DELETE:
-        - **Odstranění produktu z košíku.
-            - v1/cart/:cartId/product/:productId**
+        - Odstranění produktu z košíku.
+            - v1/cart/:cartId/product/:productId
 
-        - **Odstranění všech produktů z košíku.
-            - v1/cart/:cartId**
+        - Odstranění všech produktů z košíku.
+            - v1/cart/:cartId
 
 ----------
 API pro více košíků:
@@ -80,4 +81,4 @@ API pro více košíků:
 
 -------------
 Architektura:
-routes -> controller -> service -> repository
+routes -> controllers -> services -> repositories
