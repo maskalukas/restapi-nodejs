@@ -98,7 +98,7 @@ class CartsService implements ICartsService {
 
     /** @inheritDoc */
     public async setExactNumberOfQuantitiesOfProduct(cartId: number,productId: number, newQuantity: number): Promise<boolean|Error> {
-
+        // nastavení kusů nesmí být 0 a méně
         if(newQuantity <= 0) {
             const ErrQuantity = new Error();
             ErrQuantity.name = ERROR_KEYS.errQuantityUnder1;
