@@ -5,7 +5,7 @@ const express = require("express"),
 const CartsService = require("../services/carts-service");
 
 /**
- * Inicializuje routes, controllers a service
+ * Inicializuje routes, controllers a service PRO VÍCE KOŠÍKŮ.
  */
 const initRouters = () => {
     const CartsServiceIns = new CartsService();
