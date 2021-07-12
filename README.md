@@ -5,7 +5,7 @@ Kvůli nedostatku času mi chybí dodělat:
     - Ověřování uživatelů.
     - Ověřování existence produktů, který se vkládají do košíků.
     - Prevence proti injections a DDoS útokům.
-    - Role,...
+    - Role, testy,..
 
 
 Docker
