@@ -12,6 +12,9 @@ const initRouters = () => {
     const CartControllerIns = new CartsController(CartsServiceIns);
 
     router.get("/incompletepurchase", CartControllerIns.getAllIncompletePurchases.bind(CartControllerIns));
+    router.get("/",CartControllerIns.getAllCarts.bind(CartControllerIns));
+
+    router.delete("/", CartControllerIns.removeAllCarts.bind(CartControllerIns));
 }
 initRouters();
 

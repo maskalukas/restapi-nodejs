@@ -2,9 +2,12 @@ import {ICartsRepo} from "../db/repositories/interfaces";
 import {ICartsService} from "./interfaces";
 import {deflateRawSync} from "zlib";
 import {BulkWriteResult, UpdateWriteOpResult} from "mongodb";
+import {Transform} from "stream";
 export {};
 const CartsRepository = require("../db/repositories/carts-repository");
 const CustomersService = require("./customers-service");
+const Translator = require("./translator");
+const ERROR_KEYS = require("../constants/error-keys");
 
 /**
  * Služba pro košíky.
@@ -62,13 +65,47 @@ class CartsService implements ICartsService {
     }
 
     /** @inheritDoc */
-    public async decreaseQuantityOfProductByOne(cartId: number,productId: number):  Promise<boolean> {
+    public async decreaseQuantityOfProductByOne(cartId: number,productId: number):  Promise<boolean|Error> {
+        let cart: TMongoCartDocument;
+
+        try {
+            cart = await this.CartsRepo.getCartById(cartId);
+        } catch (err) {
+            console.error(err);
+        }
+
+        // snížení kusů nesmí být pod 1
+        if(cart) {
+            const product = cart.products.find(x => x.productId === productId);
+
+            if(product && (product.quantity-1) ) {
+                const ErrQuantity = new Error();
+                ErrQuantity.name = ERROR_KEYS.errQuantityUnder1;
+                ErrQuantity.message = Translator.getInstance().get("decreaseIsNotPossibleUnderOne");
+                return ErrQuantity;
+            }
+
+        } else {
+            const ErrProductNotFound = new Error();
+            ErrProductNotFound.name = ERROR_KEYS.errProductNotFound;
+            ErrProductNotFound.message = Translator.getInstance().get("resourceNotFound");
+            return  ErrProductNotFound;
+        }
+
         const updateResult: UpdateWriteOpResult = await this.CartsRepo.changeQuantityOfProduct(cartId,productId, -1);
         return this.checkUpdate(updateResult);
     }
 
     /** @inheritDoc */
-    public async setExactNumberOfQuantitiesOfProduct(cartId: number,productId: number, newQuantity: number): Promise<boolean> {
+    public async setExactNumberOfQuantitiesOfProduct(cartId: number,productId: number, newQuantity: number): Promise<boolean|Error> {
+
+        if(newQuantity <= 0) {
+            const ErrQuantity = new Error();
+            ErrQuantity.name = ERROR_KEYS.errQuantityUnder1;
+            ErrQuantity.message = Translator.getInstance().get("decreaseIsNotPossibleUnderOne");
+            return ErrQuantity;
+        }
+
         const updateResult = await this.CartsRepo.setExactNumberOfQuantitiesOfProduct(cartId,productId, newQuantity);
         return this.checkUpdate(updateResult);
     }
@@ -104,6 +141,22 @@ class CartsService implements ICartsService {
         });
 
         return new Promise(resolve => resolve(true));
+    }
+
+    /** @inheritDoc */
+    public getAllCarts(): Promise<TMongoCartDocument[]> {
+        return this.CartsRepo.getAllCarts();
+    }
+
+    /** @inheritDoc */
+    public removeAllCarts(): Promise<UpdateWriteOpResult> {
+        return this.CartsRepo.removeAllCarts();
+    }
+
+    /** @inheritDoc */
+    public async removeAllProductsFromCart(cartId: number): Promise<boolean> {
+        const result: UpdateWriteOpResult = await this.CartsRepo.removeAllProductsFromCart(cartId);
+        return this.checkUpdate(result);
     }
 
     private checkUpdate(updateResult: UpdateWriteOpResult): Promise<boolean> {

@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  notes:
+    build:
+      context: .
+    ports:
+      - 8080:8080
+    links:
+      - mongo
+
+  mongo:
+    image: mongo
+    volumes:
+      - mongodb:/data/db
+      - mongodb_config:/data/configdb
+    ports:
+      - 27017:27017
+
+volumes:
+  mongodb:
+  mongodb_config:
+

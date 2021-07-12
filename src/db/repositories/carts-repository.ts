@@ -65,7 +65,7 @@ class CartsRepository implements ICartsRepo {
 
         const filter: TMongoCartDocument = {
             cartId: cartId,
-            "products.productId": productId
+            "products.productId": productId,
         };
         const incrementObject: UpdateQuery<TMongoCartDocument> = {
             $inc: { "products.$.quantity": incrementByNumber }
@@ -135,6 +135,40 @@ class CartsRepository implements ICartsRepo {
             .find({ incompletePurchase: true } as TMongoCartDocument)
             .toArray();
     }
+
+    /** @inheritDoc */
+    public getAllCarts(): Promise<TMongoCartDocument[]> {
+        this.setMongoDb();
+
+        return this.mongoDb
+            .collection(this.collectionName)
+            .find()
+            .toArray();
+    }
+
+
+    /** @inheritDoc */
+    public removeAllCarts(): Promise<UpdateWriteOpResult> {
+        this.setMongoDb();
+
+        return this.mongoDb
+            .collection(this.collectionName)
+            .remove({});
+    }
+
+    /** @inheritDoc */
+    removeAllProductsFromCart(cartId: number): Promise<UpdateWriteOpResult> {
+        this.setMongoDb();
+
+        const filter: TMongoCartDocument = { cartId: cartId };
+        const setObject: UpdateQuery<TMongoCartDocument> = {
+            $set: { products: [] }
+        }
+        return this.mongoDb
+            .collection(this.collectionName)
+            .updateOne(filter, setObject);
+    }
+
 
     /**
      * Pouze nastavuje instanci na propoperty mongoDB zde ve třídě.

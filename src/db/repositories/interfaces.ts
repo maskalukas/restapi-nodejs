@@ -61,6 +61,22 @@ export interface ICartsRepo {
      * že zákazník nedokončíl objednávku.
      */
     getAllIncompletePurchaseCarts(): Promise<TMongoCartDocument[]>;
+
+    /**
+     * Vrací všechny košíky.
+     */
+    getAllCarts(): Promise<TMongoCartDocument[]>;
+
+    /**
+     * Odstraní všechny košíky.
+     */
+    removeAllCarts(): Promise<UpdateWriteOpResult>;
+
+    /**
+     * Odstranění všech produktů z košíku.
+     * @param cartId = Identifikátor košíku ve kterým se odstraní produkty.
+     */
+    removeAllProductsFromCart(cartId: number): Promise<UpdateWriteOpResult>;
 }
 
 

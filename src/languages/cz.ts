@@ -6,7 +6,10 @@ const languageData: TLanguagesKeys = {
     productQuantityDecrementedSuccessfully: "Množství kusů produktu bylo sníženo o 1.",
     productQuantitySetSuccess: "Množství kusů produktu bylo úspěšně změněno.",
     productRemovedFromCartSuccess: "Produkt byl úspěšně odstraněn z košíku.",
-    setCartIncompletePurchase: "Košíku byl úspěšně nastaven status nedokončené objednávky."
+    productsRemovedFromCartSuccess: "Produkty byly úspěšně odstraněny z košíku.",
+    allCartsRemovedSuccess: "Všechny košíky byly odstraněny úspěšně",
+    setCartIncompletePurchase: "Košíku byl úspěšně nastaven status nedokončené objednávky.",
+    decreaseIsNotPossibleUnderOne: "Množství kusů produktu není možné snížit na 0."
 }
 
 module.exports = languageData;

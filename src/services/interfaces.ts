@@ -1,4 +1,4 @@
-import {WriteOpResult} from "mongodb";
+import {UpdateWriteOpResult, WriteOpResult} from "mongodb";
 
 export interface ICartsService {
     /**
@@ -28,7 +28,7 @@ export interface ICartsService {
      * @param cartId = Identifikátor pro nalezení košíku.
      * @param productId = Identifikátor produktu, u kterého proběhně snížení množství.
      */
-    decreaseQuantityOfProductByOne(cartId: number, productId: number): Promise<boolean>;
+    decreaseQuantityOfProductByOne(cartId: number, productId: number): Promise<boolean|Error>;
 
     /**
      * Nastaví přesně nové množství kusů produktu v košíku.
@@ -36,7 +36,7 @@ export interface ICartsService {
      * @param productId = Identifikátor produktu u kterého proběhne nastavní množství.
      * @param newQuantity = Číslo na kolik se nastaví množství.
      */
-    setExactNumberOfQuantitiesOfProduct(cartId: number, productId: number, newQuantity: number): Promise<boolean>;
+    setExactNumberOfQuantitiesOfProduct(cartId: number, productId: number, newQuantity: number): Promise<boolean|Error>;
 
     /**
      * Odstraní produkt z košíku.
@@ -61,5 +61,21 @@ export interface ICartsService {
      * Informuje emailem zákazníka, že má nedokončenou objednávku.
      */
     informCustomersAboutIncomplePurchase(): Promise<boolean>;
+
+    /**
+     * Vrací všechny košíky.
+     */
+    getAllCarts(): Promise<TMongoCartDocument[]>;
+
+    /**
+     * Odstraní všechny košíky.
+     */
+    removeAllCarts(): Promise<UpdateWriteOpResult>;
+
+    /**
+     * Odstraní všechny produkty z košíku.
+     * @param cartId = Identifikátor košíku ve kterém se odstraní produkty.
+     */
+    removeAllProductsFromCart(cartId: number): Promise<boolean>;
 }
 

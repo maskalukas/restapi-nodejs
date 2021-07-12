@@ -1,8 +1,7 @@
 const MongoClient = require("mongodb").MongoClient;
 
-const url = 'mongodb://localhost:27017/test';
+const url = 'mongodb://localhost:27017/carts';
 let _db, _client;
-let ranTest = Math.random().toString();
 
 /**
  * Připojení k databázi.
@@ -10,8 +9,9 @@ let ranTest = Math.random().toString();
 const connectDB = async () => {
     try {
         MongoClient.connect(url, (err, client) => {
-            _db = client.db('test');
+            _db = client.db('carts');
             _client = client;
+            console.log("Připojení k databázi bylo úspěšné.")
         });
     } catch (e) {
         throw e
@@ -25,4 +25,4 @@ const getDB = () => _db;
  * Zavírá připojení k databázi.
  */
 const close = () => _client.close();
-module.exports = { connectDB, getDB, close, ranTest }
+module.exports = { connectDB, getDB, close }

@@ -1,6 +1,7 @@
 import {ICartsService} from "../services/interfaces";
 export {};
 const Translator = require("../services/translator");
+const ERROR_KEYS = require("../constants/error-keys");
 
 /**
  * Controller pro košíky.
@@ -68,12 +69,17 @@ class CartsController {
             console.error(err);
         }
 
-        if(result) {
+        if(result instanceof Error) {
+            if(result.name === ERROR_KEYS.errQuantityUnder1) {
+                res.status(400);
+            } else if(result.name === ERROR_KEYS.errProductNotFound) {
+                res.status(404);
+            }
+
+            res.send(result.message);
+        } else {
             res.status(200);
             res.send(Translator.getInstance().get("productQuantityDecrementedSuccessfully"));
-        } else {
-            res.status(404);
-            res.send(Translator.getInstance().get("resourceNotFound"));
         }
     }
 
@@ -81,7 +87,7 @@ class CartsController {
      * Nastavení pevného množství produktu.
      */
     public async setNumberOfQuantity(req, res, next) {
-        let result: boolean;
+        let result: boolean|Error;
 
         try {
             result = await this.CartsService.setExactNumberOfQuantitiesOfProduct(Number(req.params.cartId),Number(req.params.productId), Number(req.params.number));
@@ -89,12 +95,19 @@ class CartsController {
             console.error(err);
         }
 
-        if(result) {
-            res.status(200);
-            res.send(Translator.getInstance().get("productQuantitySetSuccess"))
-        } else {
+        if(result instanceof Error) {
+
+            if(result.name === ERROR_KEYS.errQuantityUnder1) {
+                res.status(400);
+                res.send(result.message);
+            }
+        } else if(result === false){
             res.status(404);
             res.send(Translator.getInstance().get("resourceNotFound"));
+        }
+        else {
+            res.status(200);
+            res.send(Translator.getInstance().get("productQuantitySetSuccess"));
         }
     }
 
@@ -113,6 +126,27 @@ class CartsController {
         if(result) {
             res.status(200);
             res.send(Translator.getInstance().get("productRemovedFromCartSuccess"));
+        } else {
+            res.status(404);
+            res.send(Translator.getInstance().get("resourceNotFound"));
+        }
+    }
+
+    /**
+     * Odstranění produktů z košíku.
+     */
+    public async removeAllProductsFromCart(req, res, next) {
+        let result: boolean;
+
+        try {
+            result = await this.CartsService.removeAllProductsFromCart(Number(req.params.cartId));
+        } catch (err) {
+            console.error(err);
+        }
+
+        if(result) {
+            res.status(200);
+            res.send(Translator.getInstance().get("productsRemovedFromCartSuccess"));
         } else {
             res.status(404);
             res.send(Translator.getInstance().get("resourceNotFound"));
@@ -140,6 +174,9 @@ class CartsController {
         }
     }
 
+    /**
+     * Vrací nedokončený objednávky.
+     */
     public async getAllIncompletePurchases(req,res,next) {
         let result: TMongoCartDocument[] = [];
 
@@ -150,6 +187,36 @@ class CartsController {
         }
 
         res.send(result);
+    }
+
+    /**
+     * Vrací všechny košíky.
+     */
+    public async getAllCarts(req,res, next) {
+        let result: TMongoCartDocument[] = [];
+
+        try {
+            result = await this.CartsService.getAllCarts();
+        } catch (err) {
+            console.error(err);
+        }
+
+        res.send(result);
+    }
+
+    /**
+     * Odstraní všechny košíky.
+
+     */
+    public async removeAllCarts(req,res,next) {
+        try {
+            await this.CartsService.removeAllCarts();
+            res.status(200);
+            res.send(Translator.getInstance().get("allCartsRemovedSuccess"));
+        } catch (err) {
+            res.status(500);
+            res.send(err);
+        }
     }
 }
 

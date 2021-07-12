@@ -9,5 +9,8 @@ type TLanguagesKeys = {
     productQuantityDecrementedSuccessfully: string;
     productQuantitySetSuccess: string;
     productRemovedFromCartSuccess: string;
+    productsRemovedFromCartSuccess: string;
     setCartIncompletePurchase: string;
+    decreaseIsNotPossibleUnderOne: string;
+    allCartsRemovedSuccess: string;
 }

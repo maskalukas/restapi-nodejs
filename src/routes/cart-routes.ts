@@ -18,6 +18,8 @@ const initRouters = () => {
     router.put("/:cartId/product/:productId/quantity/:number", CartControllerIns.setNumberOfQuantity.bind(CartControllerIns));
 
     router.delete("/:cartId/product/:productId", CartControllerIns.removeProductFromCart.bind(CartControllerIns));
+    router.delete("/:cartId", CartControllerIns.removeAllProductsFromCart.bind(CartControllerIns));
+
 }
 initRouters();
 
