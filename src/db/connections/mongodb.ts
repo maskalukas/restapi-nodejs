@@ -1,6 +1,6 @@
 const MongoClient = require("mongodb").MongoClient;
 
-const url = 'mongodb://localhost:27017/carts';
+const url = 'mongodb://mongo:27017/carts';
 let _db, _client;
 
 /**
