@@ -20,7 +20,7 @@ class CartsController {
      * Přidání produktu do košíku.
      */
     public async addProduct(req, res, next) {
-        let result
+        let result;
         try {
             result = await this.CartsService.addProductToCart(Number(req.params.cartId), Number(req.params.productId));
         } catch (err) {
